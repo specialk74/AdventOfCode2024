@@ -1,0 +1,1 @@
+My resolutions of Advent of Code 2024 in RUST
