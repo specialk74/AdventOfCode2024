@@ -172,35 +172,23 @@ fn find_mas_by_dir(input: &str, width: i32, lenght: i32, start: i32, debug: bool
     let char_at_down_sx = input.chars().nth(pos_down_sx as usize);
     let char_at_down_dx = input.chars().nth(pos_down_dx as usize);
 
-    if char_at_up_sx == Some('M')
-        && char_at_up_dx == Some('M')
-        && char_at_down_sx == Some('S')
-        && char_at_down_dx == Some('S')
-    {
+    let source = [
+        char_at_up_sx,
+        char_at_up_dx,
+        char_at_down_sx,
+        char_at_down_dx,
+    ];
+
+    if source == [Some('M'), Some('M'), Some('S'), Some('S')] {
         return 1;
     }
-
-    if char_at_up_sx == Some('S')
-        && char_at_up_dx == Some('S')
-        && char_at_down_sx == Some('M')
-        && char_at_down_dx == Some('M')
-    {
+    if source == [Some('S'), Some('S'), Some('M'), Some('M')] {
         return 1;
     }
-
-    if char_at_up_sx == Some('S')
-        && char_at_up_dx == Some('M')
-        && char_at_down_sx == Some('S')
-        && char_at_down_dx == Some('M')
-    {
+    if source == [Some('S'), Some('M'), Some('S'), Some('M')] {
         return 1;
     }
-
-    if char_at_up_sx == Some('M')
-        && char_at_up_dx == Some('S')
-        && char_at_down_sx == Some('M')
-        && char_at_down_dx == Some('S')
-    {
+    if source == [Some('M'), Some('S'), Some('M'), Some('S')] {
         return 1;
     }
 
