@@ -1,5 +1,4 @@
 use regex::Regex;
-use regex::RegexSet;
 use std::fs::read_to_string;
 
 fn take_1_mul(input: &str) -> i32 {
