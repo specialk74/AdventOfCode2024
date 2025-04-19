@@ -144,10 +144,10 @@ fn stuck(input: &mut [u8], witdh: usize, length: usize, pos_new_start: usize) ->
     replaced.pos = pos_new_start;
 
     let dict_y = HashMap::from([
-        (Verso::Up, (b'5', 1, 1, Verso::Right)),
-        (Verso::Down, (b'6', -1, -1, Verso::Left)),
-        (Verso::Left, (b'7', 1, -1, Verso::Up)),
-        (Verso::Right, (b'8', -1, 1, Verso::Down)),
+        (Verso::Up, (1, 1, Verso::Right)),
+        (Verso::Down, (-1, -1, Verso::Left)),
+        (Verso::Left, (1, -1, Verso::Up)),
+        (Verso::Right, (-1, 1, Verso::Down)),
     ]);
 
     let dict_x = HashMap::from([
@@ -171,12 +171,7 @@ fn stuck(input: &mut [u8], witdh: usize, length: usize, pos_new_start: usize) ->
 
         let (new_x, new_y) = match replaced.car {
             b'#' => {
-                let (replace_car, x, y, new_verso) = &dict_y[&verso];
-                replaced.replace_car = *replace_car;
-                if let Some(touched) = replaced.replace(b'Y') {
-                    return touched;
-                }
-                replaced.last_pos = replaced.pos;
+                let (x, y, new_verso) = &dict_y[&verso];
                 verso = *new_verso;
                 (x, y)
             }
@@ -185,17 +180,11 @@ fn stuck(input: &mut [u8], witdh: usize, length: usize, pos_new_start: usize) ->
                     println!("Touched: {}", replaced.pos);
                 }
                 replaced.touched = 1;
-                let (replace_car, x, y, new_verso) = &dict_y[&verso];
-                replaced.replace_car = *replace_car;
-                if let Some(touched) = replaced.replace(b'Y') {
-                    return touched;
-                }
-                replaced.last_pos = replaced.pos;
+                let (x, y, new_verso) = &dict_y[&verso];
                 verso = *new_verso;
                 (x, y)
             }
             b'^' => {
-                replaced.last_pos = replaced.pos;
                 let (_, x, y) = &dict_x[&verso];
                 (x, y)
             }
@@ -239,18 +228,6 @@ fn stuck(input: &mut [u8], witdh: usize, length: usize, pos_new_start: usize) ->
         }
 
         replaced.pos = ((replaced.pos as isize) + (witdh as isize * new_y + new_x)) as usize;
-
-        // iteration += 1;
-        // if iteration > 10000 {
-        //     println!("\t\tExit for iteration -> false width: {}", witdh);
-        //     let output = String::from_utf8_lossy(input);
-        //     let mut output = output.into_owned();
-        //     for i in 1..length {
-        //         output.insert(i * witdh + i, '\n');
-        //     }
-        //     println!("{}", output);
-        //     return false;
-        // }
     }
     0
 }
@@ -278,9 +255,9 @@ fn guard_2(input: &str, witdh: usize, length: usize) -> usize {
         // );
 
         let ret = stuck(&mut new_input, witdh, length, pos_new_start);
-        if ret == 1 {
-            println!("sum: {} - pos: {}\n\n\n", stuck_sum, pos_new_obstacle);
-        }
+        //if ret == 1 {
+        //    println!("sum: {} - pos: {}\n\n\n", stuck_sum, pos_new_obstacle);
+        //}
         stuck_sum += ret;
 
         //println!("\tverso: {:?}, stuck: {}", verso, stuck_sum);
