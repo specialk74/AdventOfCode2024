@@ -1,11 +1,10 @@
 use std::fs::read_to_string;
 
-fn make_calculus(result: usize, addendum: &[usize]) -> usize {
+fn make_calculus(result: usize, addendum: &[usize], part2: bool) -> usize {
     let debug = 0;
     let mut operations = vec!['+'; addendum.len() - 1];
 
-    let number = 1 << (addendum.len() - 1);
-    for _ in 0..number {
+    loop {
         if debug >= 2 {
             println!("operations: {:?}", operations);
         }
@@ -17,6 +16,17 @@ fn make_calculus(result: usize, addendum: &[usize]) -> usize {
             match *operation {
                 '+' => total += addendum[i + 1],
                 '*' => total *= addendum[i + 1],
+                '|' => {
+                    if addendum[i + 1] < 10 {
+                        total = total * 10 + addendum[i + 1];
+                    } else if addendum[i + 1] < 100 {
+                        total = total * 100 + addendum[i + 1];
+                    } else if addendum[i + 1] < 1000 {
+                        total = total * 1000 + addendum[i + 1];
+                    } else {
+                        panic!("Error: number too big");
+                    }
+                }
                 _ => unreachable!(),
             }
         }
@@ -31,7 +41,7 @@ fn make_calculus(result: usize, addendum: &[usize]) -> usize {
         if total == result {
             if debug >= 1 {
                 println!(
-                    "TROVATO per operations: {:?} result: {} addedndum: {:?}",
+                    "TROVATO per operations: {:?} result: {} addendum: {:?}",
                     operations, result, addendum
                 );
             }
@@ -43,8 +53,11 @@ fn make_calculus(result: usize, addendum: &[usize]) -> usize {
             if operations[pos] == '+' {
                 operations[pos] = '*';
                 break;
-            } else if pos == 0 {
+            } else if operations[pos] == '*' && part2 {
+                operations[pos] = '|';
                 break;
+            } else if pos == 0 {
+                return 0;
             }
             operations[pos] = '+';
             pos -= 1;
@@ -64,7 +77,7 @@ fn operation_procedures_1(input: &str) -> usize {
             .split_whitespace()
             .map(|s| s.parse::<usize>().unwrap())
             .collect::<Vec<usize>>();
-        sum += make_calculus(result, &addendum);
+        sum += make_calculus(result, &addendum, false);
     }
     sum
 }
@@ -79,7 +92,7 @@ fn operation_procedures_2(input: &str) -> usize {
             .split_whitespace()
             .map(|s| s.parse::<usize>().unwrap())
             .collect::<Vec<usize>>();
-        sum += make_calculus(result, &addendum);
+        sum += make_calculus(result, &addendum, true);
     }
     sum
 }
@@ -90,7 +103,7 @@ fn main() {
 
     println!("Result 1: {}", operation_procedures_1(&input));
 
-    //println!("Result 2: {}", operation_procedures_2(&input));
+    println!("Result 2: {}", operation_procedures_2(&input));
 }
 
 #[cfg(test)]
